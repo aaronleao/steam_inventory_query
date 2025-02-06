@@ -5,7 +5,7 @@ __pycache__/
 
 # Inventory JSON files
 *_full_inventory_*.json
-
+*inventory*.txt
 # C extensions
 *.so
 
