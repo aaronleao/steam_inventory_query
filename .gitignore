@@ -3,6 +3,9 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+# Inventory JSON files
+*_full_inventory_*.json
+*inventory*.txt
 # C extensions
 *.so
 
