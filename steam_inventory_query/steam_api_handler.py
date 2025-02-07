@@ -4,7 +4,7 @@ from steam_inventory_query import inventory_validator
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__package__)
 
-def fetch_inventory(STEAM_ID=str, APP_ID=str, CONTEXT_ID=str, API_KEY=str) -> dict:
+def fetch_inventory(STEAM_ID: str, APP_ID: str, CONTEXT_ID: str, API_KEY: str) -> dict:
     """
     Fetches inventory data from the given URL with pagination.
     """

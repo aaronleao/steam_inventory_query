@@ -1,7 +1,7 @@
 from steam_inventory_query import constants
 
 class inventory_item(object):
-    def __init__(self, item_description=dict):
+    def __init__(self, item_description: dict):
         if not item_description:
             return None
 
@@ -20,7 +20,7 @@ class inventory_item(object):
         # full_line = f'{self.classid: <10}|{self.instanceid: <10}|{line}'
         print(line)
 
-    def get_descriptions_values(self, item_description=dict):
+    def get_descriptions_values(self, item_description: dict):
 
         sub_descriptions = item_description.get("descriptions") # Not all description has sub_descriptions.
         if sub_descriptions is not None:
@@ -28,7 +28,7 @@ class inventory_item(object):
             return values
         return None
 
-    def get_hero(self, value=str):
+    def get_hero(self, value: str):
         """
         Returns the hero is it is aplicable.
         Returns None if it is not.

@@ -21,8 +21,6 @@ def main():
     if STEAM_ID is None and STEAM_USER:
         STEAM_ID = [steam_api_handler.resolve_vanity(API_KEY, user) for user in STEAM_USER]
 
-    # Create cache dir
-    fs_handler.create_cache_dir()
 
     # Fetch the inventory
     inventories = [fetch_inventory.fetch(profile_id, APP_ID, constants.CONTEXT_ID, API_KEY, OVERWRITE) for profile_id in STEAM_ID ]
@@ -33,4 +31,7 @@ def main():
             display_inventory.display(inventory)
 
 if __name__ == "__main__":
+
+    # Create cache dir
+    fs_handler.create_cache_dir()
     main()
