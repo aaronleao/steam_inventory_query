@@ -1,7 +1,7 @@
-from steam_inventory_query import constants
 import json
 import logging
 import os
+from steam_inventory_query import constants
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__package__)
@@ -17,7 +17,7 @@ def get_inventory_file_path(steam_id=str, app_id=str):
 
 def read_inventory(inventory_file_path=str) -> dict:
     with open(inventory_file_path, "r", encoding="utf-8") as file:
-        logger.info(f"Reading '{inventory_file_path}'.")
+        logger.info("Reading '%s'.", inventory_file_path)
         inventory = json.load(file)
         return inventory
 
@@ -25,4 +25,4 @@ def write_inventory(inventory_file_path=str, inventory=dict):
     # Save the full inventory to a JSON file
     with open(inventory_file_path, "w", encoding="utf-8") as file:
         json.dump(inventory, file, indent=4)
-    logger.info(f"Inventory saved in: '{inventory_file_path}'.")
+    logger.info("Inventory saved in: '%s'.", inventory_file_path)

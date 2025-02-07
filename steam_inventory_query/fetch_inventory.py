@@ -1,10 +1,9 @@
-from steam_inventory_query import constants
+import logging
+import os
+
 from steam_inventory_query import fs_handler
 from steam_inventory_query import inventory_validator
 from steam_inventory_query import steam_api_handler
-import logging
-import os
-import requests
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__package__)
@@ -40,5 +39,5 @@ def log_inventory_details(inventory: dict):
     Log details about the inventory.
     """
 
-    logger.info(f'Assets: {len(inventory["assets"])}')
-    logger.info(f'Descriptions: {len(inventory["descriptions"])}')
+    logger.info('Assets: %d', len(inventory["assets"]))
+    logger.info('Descriptions: %d', len(inventory["descriptions"]))

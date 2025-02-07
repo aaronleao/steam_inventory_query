@@ -1,5 +1,5 @@
-from steam_inventory_query import constants
 import logging
+
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__package__)
 

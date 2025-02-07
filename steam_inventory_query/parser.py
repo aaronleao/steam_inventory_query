@@ -1,5 +1,5 @@
-from steam_inventory_query import constants
 import argparse
+from steam_inventory_query import constants
 
 def check_args(args):
     if args.profile_id is None and args.profile_user is None:

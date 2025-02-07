@@ -1,7 +1,7 @@
+import getpass
 from enum import Enum
 from platformdirs import PlatformDirs
 
-import getpass
 
 APP_NAME = "steam_inventory_query"
 STEAM_API_KEY_USAGE = 10

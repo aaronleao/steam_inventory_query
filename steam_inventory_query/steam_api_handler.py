@@ -1,6 +1,6 @@
-from steam_inventory_query import inventory_validator
 import logging
 import requests
+from steam_inventory_query import inventory_validator
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__package__)
 
