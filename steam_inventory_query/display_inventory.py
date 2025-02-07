@@ -1,4 +1,4 @@
-from steam_inventory_query import inventory_item
+from steam_inventory_query.inventory_item import inventory_item
 
 def get_hero(values):
     """
@@ -21,10 +21,6 @@ def display(inventory):
     Displays all assets with their respective descriptions.
     """
 
-    print(f'Assets size {len(inventory["assets"])}')
-    print(f'Descriptions size {len(inventory["descriptions"])}')
-
     for description in inventory["descriptions"]:
-
-        item = inventory_item.inventory_item(description)
+        item = inventory_item(description)
         item.print()

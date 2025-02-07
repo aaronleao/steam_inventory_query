@@ -5,6 +5,8 @@ def validate_format(inventory=dict) -> bool:
     return True
 
 def validate_size(inventory=dict) -> bool:
+    print(f'Assets size {len(inventory["assets"])}')
+    print(f'Descriptions size {len(inventory["descriptions"])}')
     if not len(inventory["assets"]):
         return False
     return True

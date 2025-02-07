@@ -1,6 +1,6 @@
 from steam_inventory_query import constants
 
-class inventory_item():
+class inventory_item(object):
     def __init__(self, item_description=dict):
         if not item_description:
             return None
@@ -30,5 +30,8 @@ class inventory_item():
             return values
         return None
 
-    def __call__(self, item_description):
-        print("inventory_item Dentro do __call__")
+    # def __call__(self, item_description):
+    #     print("inventory_item Dentro do __call__")
+
+# __call__ = inventory_item.__init__
+# __call__ = __init__
