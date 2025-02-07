@@ -18,7 +18,7 @@ class inventory_item(object):
     def print(self):
         line = f'{self.item_desc_type: <7}|{self.item_desc_name: <24}|{self.desc_type: <20}|{self.name: <20}|{self.market_name: <20}|{self.marketable: <2}|{self.tradable: <2}|'
         full_line = f'{self.classid: <10}|{self.instanceid: <10}|{line}'
-        print(full_line)
+        print(line)
 
     def get_descriptions_values(self, item_description=dict):
 
