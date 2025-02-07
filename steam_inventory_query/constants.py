@@ -3,12 +3,14 @@ from platformdirs import PlatformDirs
 import getpass
 
 APP_NAME = "steam_inventory_query"
+STEAM_API_KEY_USAGE = 10
 APP_ID_map = {570, "Dota 2"}
 CACHE_DIR = PlatformDirs(APP_NAME, getpass.getuser()).user_data_dir
+CONTEXT_ID = "2"  # Default context ID for most games
 
 class item_type(Enum):
     DEFAULT = 0
-    BUNDLE  = 1
-    HERO    = 2
-    WARD    = 3
+    BUNDLE = 1
+    HERO = 2
+    WARD = 3
     WEATHER = 4
