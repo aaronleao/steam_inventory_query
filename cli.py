@@ -23,19 +23,21 @@ def main():
     2. Fetches the inventory for each Steam ID.
     3. Displays the fetched inventories if the display option is enabled.
     """
-    
-    # Get args
-    [STEAM_ID, STEAM_USER, APP_ID, API_KEY, OVERWRITE, DISPLAY] = parser.get_args()
 
-    if STEAM_ID is None and STEAM_USER:
-        STEAM_ID = [steam_api_handler.resolve_vanity(API_KEY, user) for user in STEAM_USER]
+    # Get args
+    [steam_id, steam_user, app_id, api_key, overwrite, display] = parser.get_args()
+
+    if steam_id is None and steam_user:
+        steam_id = [steam_api_handler.resolve_vanity(api_key, user) for user in steam_user]
 
 
     # Fetch the inventory
-    inventories = [fetch_inventory.fetch(profile_id, APP_ID, constants.CONTEXT_ID, API_KEY, OVERWRITE) for profile_id in STEAM_ID ]
+    inventories = [fetch_inventory.fetch(profile_id, app_id,
+                                        constants.CONTEXT_ID,
+                                        api_key, overwrite) for profile_id in steam_id ]
 
     # Display inventories
-    if DISPLAY:
+    if display:
         for inventory in inventories:
             display_inventory.display(inventory)
 

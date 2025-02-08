@@ -7,7 +7,6 @@ from steam_inventory_query import constants
 from steam_inventory_query import inventory_validator
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
-
 logger = logging.getLogger(__package__)
 
 def fetch_inventory(steam_id: str, app_id: str, context_id: str, api_key: str) -> dict:
