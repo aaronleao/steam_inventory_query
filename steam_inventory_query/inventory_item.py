@@ -30,7 +30,7 @@ class InventoryItem:
 
     def get_descriptions_values(self, item_description: dict):
         """ Returns the values of the descriptions. """
-        sub_descriptions = item_description.get("descriptions") # Not all description has sub_descriptions.
+        sub_descriptions = item_description.get("descriptions")
         if sub_descriptions is not None:
             values = [d['value'] for d in sub_descriptions if 'value' in d]
             return values
@@ -41,27 +41,29 @@ class InventoryItem:
         if not description_values:
             return None
 
-        return [value.split(':')[1].strip() for value in description_values if value.startswith('Used By:')]
+        return [value.split(':')[1].strip()
+                for value in description_values
+                if value.startswith('Used By:')]
 
-    def is_weather(self, desc_type: str) -> str:
+    def is_weather(self, desc_type: str) -> bool:
         """ Returns if it is a WEATHER item """
         if desc_type and "Weather" in desc_type:
             return True
         return False
 
-    def is_bundle(self, desc_type: str) -> str:
+    def is_bundle(self, desc_type: str) -> bool:
         """ Returns if it is a BUNDLE item """
         if desc_type and "Bundle" in desc_type:
             return True
         return False
 
-    def is_ward(self, desc_type: str) -> str:
+    def is_ward(self, desc_type: str) -> bool:
         """ Returns if it is a WARD item """
         if desc_type and "Ward" in desc_type:
             return True
         return False
 
-    def is_courier(self, desc_type: str) -> str:
+    def is_courier(self, desc_type: str) -> bool:
         """ Returns if it is a COURIER item """
         if desc_type and "Courier" in desc_type:
             return True

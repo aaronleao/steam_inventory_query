@@ -71,8 +71,7 @@ def fetch_players(api_key, steam_ids):
         players = data.get("response", {}).get("players", [])
         if players:
             return players
-        else:
-            logger.error("Error: No player data found.")
+        logger.error("Error: No player data found.")
     else:
         logger.error("Failed to fetch profile. Status code: %s ",response.status_code)
 
