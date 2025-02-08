@@ -1,9 +1,11 @@
 import json
 import logging
 import os
+import sys
 from steam_inventory_query import constants
 
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(stream=sys.stdout, level=logging.INFO)
+
 logger = logging.getLogger(__package__)
 
 def create_cache_dir():

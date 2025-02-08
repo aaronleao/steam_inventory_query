@@ -1,7 +1,10 @@
 import logging
 import requests
+import sys
+from steam_inventory_query import constants
 from steam_inventory_query import inventory_validator
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(stream=sys.stdout, level=logging.INFO)
+
 logger = logging.getLogger(__package__)
 
 def fetch_inventory(STEAM_ID: str, APP_ID: str, CONTEXT_ID: str, API_KEY: str) -> dict:
@@ -17,9 +20,9 @@ def fetch_inventory(STEAM_ID: str, APP_ID: str, CONTEXT_ID: str, API_KEY: str) -
 
     while True:
         # Make the API request
-        response = requests.get(url, params=params)
+        response = requests.get(url, params=params, timeout=constants.INVENTORY_URL_TIMEOUT)
         if response.status_code != 200:
-            logger.error(f"Failed to fetch inventory. Status code: {response.status_code}")
+            logger.error("Failed to fetch inventory. Status code: %s", response.status_code)
             break
 
         # Parse the JSON response

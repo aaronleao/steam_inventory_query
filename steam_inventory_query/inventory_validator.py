@@ -1,6 +1,8 @@
 import logging
+import sys
 
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(stream=sys.stdout, level=logging.INFO)
+
 logger = logging.getLogger(__package__)
 
 def validate_format(inventory: dict) -> bool:

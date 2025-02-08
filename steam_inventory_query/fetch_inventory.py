@@ -1,11 +1,12 @@
 import logging
 import os
-
+import sys
 from steam_inventory_query import fs_handler
 from steam_inventory_query import inventory_validator
 from steam_inventory_query import steam_api_handler
 
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(stream=sys.stdout, level=logging.INFO)
+
 logger = logging.getLogger(__package__)
 
 def fetch(steam_id, app_id, context_id, api_key=None, overwrite=False) -> dict:
