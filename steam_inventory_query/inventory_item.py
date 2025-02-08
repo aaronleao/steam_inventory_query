@@ -81,22 +81,22 @@ class InventoryItem:
         """
 
         if self.is_courier(self.desc_type):
-            return [constants.item_type.COURIER.name, constants.item_type.COURIER.value]
+            return [constants.ItemType.COURIER.name, constants.ItemType.COURIER.value]
 
         if self.is_weather(self.desc_type):
-            return [constants.item_type.WEATHER.name, constants.item_type.WEATHER.value]
+            return [constants.ItemType.WEATHER.name, constants.ItemType.WEATHER.value]
 
         if self.is_ward(self.desc_type):
-            return [constants.item_type.WARD.name, constants.item_type.WARD.value]
+            return [constants.ItemType.WARD.name, constants.ItemType.WARD.value]
 
         hero = self.is_hero(self.description_values)
         if hero:
             if self.is_bundle(self.desc_type):
-                return [constants.item_type.HERO_BUNDLE.name, hero[0]]
+                return [constants.ItemType.HERO_BUNDLE.name, hero[0]]
             else:
-                return [constants.item_type.HERO.name, hero[0]]
+                return [constants.ItemType.HERO.name, hero[0]]
 
         if self.is_bundle(self.desc_type):
-            return [constants.item_type.BUNDLE.name, constants.item_type.BUNDLE.value]
+            return [constants.ItemType.BUNDLE.name, constants.ItemType.BUNDLE.value]
 
-        return [constants.item_type.MISC.name, constants.item_type.MISC.value]
+        return [constants.ItemType.MISC.name, constants.ItemType.MISC.value]

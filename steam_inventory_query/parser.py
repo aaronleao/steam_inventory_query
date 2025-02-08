@@ -26,4 +26,3 @@ def get_args():
     check_args(args)
 
     return [args.profile_id, args.profile_user, args.app_id, args.api_key, args.overwrite, args.display]
-

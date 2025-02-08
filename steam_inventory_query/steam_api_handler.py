@@ -27,10 +27,10 @@ def fetch_inventory(steam_id: str, app_id: str, context_id: str, api_key: str) -
 
         # Parse the JSON response
         data = response.json()
-        
+
         if not inventory_validator.validate_format(data):
             raise SystemExit("Invalid online inventory.")
-            
+
         # Append the items to the result
         inventory["assets"].extend(data["assets"])
         inventory["descriptions"].extend(data["descriptions"])
