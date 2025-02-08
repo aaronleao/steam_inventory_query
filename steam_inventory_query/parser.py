@@ -3,7 +3,7 @@ from steam_inventory_query import constants
 
 def check_args(args):
     if args.profile_id is None and args.profile_user is None:
-        raise SystemExit(f"Please provide either --profile-id or --profile-user. e.g.: --profile-id XXX YYY ...")
+        raise SystemExit("Please provide either --profile-id or --profile-user. e.g.: --profile-id XXX YYY ...")
     if args.profile_id and len(args.profile_id) > constants.STEAM_API_KEY_USAGE:
         raise SystemExit(f"Please provide less than {constants.STEAM_API_KEY_USAGE} Steam profile IDs.")
 

@@ -28,6 +28,7 @@ def fetch(steam_id, app_id, context_id, api_key=None, overwrite=False) -> dict:
         if not inventory_validator.validate_size(inventory):
                 raise SystemExit(f"Empty inventory in {inventory_file_path}. Run with --overwrite to download again.")
     else:
+        logger.info('Fetching STEAM_ID %s online inventory ', steam_id)
         inventory = steam_api_handler.fetch_inventory(steam_id, app_id, context_id, api_key)
         fs_handler.write_inventory(inventory_file_path, inventory)
 

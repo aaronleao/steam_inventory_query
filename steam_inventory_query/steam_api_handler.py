@@ -22,15 +22,14 @@ def fetch_inventory(STEAM_ID: str, APP_ID: str, CONTEXT_ID: str, API_KEY: str) -
         # Make the API request
         response = requests.get(url, params=params, timeout=constants.INVENTORY_URL_TIMEOUT)
         if response.status_code != 200:
-            logger.error("Failed to fetch inventory. Status code: %s", response.status_code)
-            break
+            raise SystemExit(f"Failed to fetch online inventory. Status code: {response.status_code}")
 
         # Parse the JSON response
         data = response.json()
         
         if not inventory_validator.validate_format(data):
-            break
-
+            raise SystemExit("Invalid online inventory.")
+            
         # Append the items to the result
         inventory["assets"].extend(data["assets"])
         inventory["descriptions"].extend(data["descriptions"])
@@ -47,7 +46,7 @@ def resolve_vanity(API_KEY, STEAM_USER):
 
     url = f'http://api.steampowered.com/ISteamUser/ResolveVanityURL/v0001/?key={API_KEY}&vanityurl={STEAM_USER}'
     params = {}
-    response = requests.get(url, params)
+    response = requests.get(url, params, timeout=constants.INVENTORY_URL_TIMEOUT)
     data = response.json()
     response = data.get("response")
     success = response.get("success")
@@ -62,7 +61,7 @@ def fetch_players(API_KEY, STEAM_ID):
     url = "http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/"
     params = {"key": API_KEY, "steamids": STEAM_ID}
 
-    response = requests.get(url, params)
+    response = requests.get(url, params, timeout=constants.INVENTORY_URL_TIMEOUT)
 
     # Check if the request was successful
     if response.status_code == 200:
@@ -73,6 +72,6 @@ def fetch_players(API_KEY, STEAM_ID):
         else:
             logger.error("Error: No player data found.")
     else:
-        logger.error(f"Failed to fetch profile. Status code: {response.status_code}")
+        logger.error("Failed to fetch profile. Status code: %s ",response.status_code)
 
     return None
