@@ -4,6 +4,7 @@ import json
 import logging
 import os
 import sys
+
 from steam_inventory_query import constants
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
@@ -33,3 +34,9 @@ def write_inventory(inventory_file_path: str, inventory: dict):
     with open(inventory_file_path, "w", encoding="utf-8") as file:
         json.dump(inventory, file, indent=4)
     logger.info("Inventory saved in: '%s'.", inventory_file_path)
+
+def get_player_summaries_path(steam_id: str):
+    """ Returns the file path for the inventory file. """	
+    player_file = f"{steam_id}_summaries.json"
+    player_path = f'{constants.CACHE_DIR}/{player_file}'
+    return player_path

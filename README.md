@@ -21,10 +21,7 @@ python steam_inventory_query/cli.py --profile-id 123123123 --api-key AT328ATTE28
 
 ## TODO
 
-- [ ] Add option to list the whole inventory
-- [ ] Add option to filter all Heroes inside inventory
-- [ ] Add option to filter Ward
-- [ ] Add option to filter Courier
+- [ ] Add option to display the whole inventory, HERO and MISC as well.
 - [ ] Refactor display_inventory function
 - [ ] Add Github actions to perform system level test
 - [ ] Generate page with the inventory periodically

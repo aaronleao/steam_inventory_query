@@ -27,16 +27,15 @@ def main():
 
     # Get args
     args = parser.get_args()
-    [steam_ids, steam_users, app_id, api_key, overwrite, display_inventory_flag, display_player_flag] = [args.profile_id, args.profile_user, args.app_id, args.api_key, args.overwrite, args.display_inventory, args.display_player]
 
-    players = steam_players.fetch_players(api_key, steam_ids, steam_users)
-    steam_players.set_players_inventory(api_key, players, app_id, overwrite)
+    players = steam_players.fetch_players(args.api_key, args.steam_ids, args.steam_users)
+    steam_players.set_players_inventory(args.api_key, players, args.app_id, args.overwrite)
     
-    if display_player_flag:
-        for player in players:
+    for player in players:
+        if args.display_player:
             player.print()
-            if display_inventory_flag:
-                display_inventory.display(player.inventory)
+        if args.display_inventory:
+            display_inventory.display(player.inventory, args.display_inventory_full)
 
 if __name__ == "__main__":
 
