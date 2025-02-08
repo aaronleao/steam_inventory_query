@@ -1,6 +1,13 @@
+""" This module contains the class to represent an inventory item. """
+
 from steam_inventory_query import constants
 
-class inventory_item(object):
+class InventoryItem:
+    """
+    This class represents an inventory item.
+    It provides methods to extract and display relevant information
+    from the item description.
+    """
     def __init__(self, item_description: dict):
         if not item_description:
             return None
@@ -16,11 +23,13 @@ class inventory_item(object):
         [self.item_desc_type, self.item_desc_name] = self.set_item_type()
 
     def print(self):
+        """ Prints the item description. """
         line = f'{self.item_desc_type: <12}|{self.item_desc_name: <30}|{self.desc_type: <30}|{self.name: <60}|{self.marketable: <2}|{self.tradable: <2}|'
         # full_line = f'{self.classid: <10}|{self.instanceid: <10}|{line}'
         print(line)
 
     def get_descriptions_values(self, item_description: dict):
+        """ Returns the values of the descriptions. """
         sub_descriptions = item_description.get("descriptions") # Not all description has sub_descriptions.
         if sub_descriptions is not None:
             values = [d['value'] for d in sub_descriptions if 'value' in d]
@@ -28,42 +37,32 @@ class inventory_item(object):
         return None
 
     def is_hero(self, description_values: list) -> str:
-        """
-        Returns if it is a HERO item
-        """
+        """ Returns if it is a HERO item """
         if not description_values:
             return None
 
         return [value.split(':')[1].strip() for value in description_values if value.startswith('Used By:')]
 
     def is_weather(self, desc_type: str) -> str:
-        """
-        Returns if it is a WEATHER item
-        """
+        """ Returns if it is a WEATHER item """
         if desc_type and "Weather" in desc_type:
             return True
         return False
 
     def is_bundle(self, desc_type: str) -> str:
-        """
-        Returns if it is a BUNDLE item
-        """
+        """ Returns if it is a BUNDLE item """
         if desc_type and "Bundle" in desc_type:
             return True
         return False
-    
+
     def is_ward(self, desc_type: str) -> str:
-        """
-        Returns if it is a WARD item
-        """
+        """ Returns if it is a WARD item """
         if desc_type and "Ward" in desc_type:
             return True
         return False
-    
+
     def is_courier(self, desc_type: str) -> str:
-        """
-        Returns if it is a COURIER item
-        """
+        """ Returns if it is a COURIER item """
         if desc_type and "Courier" in desc_type:
             return True
         return False
@@ -86,7 +85,7 @@ class inventory_item(object):
 
         if self.is_weather(self.desc_type):
             return [constants.item_type.WEATHER.name, constants.item_type.WEATHER.value]
-        
+
         if self.is_ward(self.desc_type):
             return [constants.item_type.WARD.name, constants.item_type.WARD.value]
 
@@ -96,8 +95,8 @@ class inventory_item(object):
                 return [constants.item_type.HERO_BUNDLE.name, hero[0]]
             else:
                 return [constants.item_type.HERO.name, hero[0]]
-        
+
         if self.is_bundle(self.desc_type):
-                return [constants.item_type.BUNDLE.name, constants.item_type.BUNDLE.value]
-        
+            return [constants.item_type.BUNDLE.name, constants.item_type.BUNDLE.value]
+
         return [constants.item_type.MISC.name, constants.item_type.MISC.value]

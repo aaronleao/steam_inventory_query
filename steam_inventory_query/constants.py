@@ -1,3 +1,4 @@
+""" Module providing Constants for the steam_inventory_query package."""
 import getpass
 from enum import Enum
 from platformdirs import PlatformDirs
@@ -11,6 +12,7 @@ CONTEXT_ID = "2"  # Default context ID for most games
 INVENTORY_URL_TIMEOUT = 1000000000  # 1 second
 
 class item_type(Enum):
+    """ Enum for the item type. """	
     BUNDLE      = "BUNDLE"
     COURIER     = "COURIER"
     HERO_BUNDLE = "HERO_BUNDLE"

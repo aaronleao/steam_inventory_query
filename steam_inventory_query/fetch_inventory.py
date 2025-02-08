@@ -1,3 +1,5 @@
+""" This module is responsible for fetching the inventory from the Steam API or from the cache."""
+
 import logging
 import os
 import sys
@@ -24,9 +26,9 @@ def fetch(steam_id, app_id, context_id, api_key=None, overwrite=False) -> dict:
 
         # Validate inventory
         if not inventory_validator.validate_format(inventory):
-                raise SystemExit(f"Invalid inventory data in {inventory_file_path}. Run with --overwrite to download again.")
+            raise SystemExit(f"Invalid inventory data in {inventory_file_path}. Run with --overwrite to download again.")
         if not inventory_validator.validate_size(inventory):
-                raise SystemExit(f"Empty inventory in {inventory_file_path}. Run with --overwrite to download again.")
+            raise SystemExit(f"Empty inventory in {inventory_file_path}. Run with --overwrite to download again.")
     else:
         logger.info('Fetching STEAM_ID %s online inventory ', steam_id)
         inventory = steam_api_handler.fetch_inventory(steam_id, app_id, context_id, api_key)

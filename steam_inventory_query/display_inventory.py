@@ -1,4 +1,6 @@
-from steam_inventory_query.inventory_item import inventory_item
+""" This module is responsible for displaying the inventory items. """
+
+from steam_inventory_query.inventory_item import InventoryItem
 
 def display(inventory):
     """
@@ -6,5 +8,5 @@ def display(inventory):
     """
 
     for description in inventory["descriptions"]:
-        item = inventory_item(description)
+        item = InventoryItem(description)
         item.print()

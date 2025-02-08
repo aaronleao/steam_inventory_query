@@ -1,22 +1,23 @@
+""" This module contains functions for fetching inventory data from the Steam API. """
+
+import sys
 import logging
 import requests
-import sys
 from steam_inventory_query import constants
 from steam_inventory_query import inventory_validator
+
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
 logger = logging.getLogger(__package__)
 
-def fetch_inventory(STEAM_ID: str, APP_ID: str, CONTEXT_ID: str, API_KEY: str) -> dict:
-    """
-    Fetches inventory data from the given URL with pagination.
-    """
+def fetch_inventory(steam_id: str, app_id: str, context_id: str, api_key: str) -> dict:
+    """ Fetches inventory data from the given URL with pagination. """
 
     inventory = {"assets": [], "descriptions": []}
 
     # Construct the base URL and parameters
-    url = f"https://steamcommunity.com/inventory/{STEAM_ID}/{APP_ID}/{CONTEXT_ID}"
-    params = {"key": API_KEY} if API_KEY else {}
+    url = f"https://steamcommunity.com/inventory/{steam_id}/{app_id}/{context_id}"
+    params = {"key": api_key} if api_key else {}
 
     while True:
         # Make the API request
@@ -42,24 +43,26 @@ def fetch_inventory(STEAM_ID: str, APP_ID: str, CONTEXT_ID: str, API_KEY: str) -
 
     return inventory
 
-def resolve_vanity(API_KEY, STEAM_USER):
+def resolve_vanity(api_key, steam_user):
+    """ Resolves a Steam username to a Steam ID. """	
 
-    url = f'http://api.steampowered.com/ISteamUser/ResolveVanityURL/v0001/?key={API_KEY}&vanityurl={STEAM_USER}'
+    url = f'http://api.steampowered.com/ISteamUser/ResolveVanityURL/v0001/?key={api_key}&vanityurl={steam_user}'
     params = {}
     response = requests.get(url, params, timeout=constants.INVENTORY_URL_TIMEOUT)
     data = response.json()
     response = data.get("response")
     success = response.get("success")
     if success != 1:
-        raise SystemExit(f"Failed to fetch STEAM_ID for{STEAM_USER}")
+        raise SystemExit(f"Failed to fetch STEAM_ID for{steam_user}")
 
     steam_id = response.get("steamid")
     return steam_id
 
-def fetch_players(API_KEY, STEAM_ID):
+def fetch_players(api_key, steam_ids):
+    """ Fetches players data from the Steam API. """
 
     url = "http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/"
-    params = {"key": API_KEY, "steamids": STEAM_ID}
+    params = {"key": api_key, "steamids": steam_ids}
 
     response = requests.get(url, params, timeout=constants.INVENTORY_URL_TIMEOUT)
 
