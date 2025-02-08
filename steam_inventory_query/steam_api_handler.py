@@ -42,7 +42,7 @@ def fetch_inventory(steam_id: str, app_id: str, context_id: str, api_key: str) -
 
     return inventory
 
-def resolve_vanity(api_key, steam_user):
+def resolve_vanity(api_key: str, steam_user: str) -> str:
     """ Resolves a Steam username to a Steam ID. """	
 
     url = f'http://api.steampowered.com/ISteamUser/ResolveVanityURL/v0001/?key={api_key}&vanityurl={steam_user}'
@@ -57,7 +57,7 @@ def resolve_vanity(api_key, steam_user):
     steam_id = response.get("steamid")
     return steam_id
 
-def fetch_players(api_key, steam_ids):
+def fetch_players_summaries(api_key, steam_ids):
     """ Fetches players data from the Steam API. """
 
     url = "http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/"

@@ -5,20 +5,21 @@ import os
 import sys
 from steam_inventory_query import fs_handler
 from steam_inventory_query import inventory_validator
+from steam_inventory_query import steam_players
 from steam_inventory_query import steam_api_handler
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
 logger = logging.getLogger(__package__)
 
-def fetch(steam_id, app_id, context_id, api_key=None, overwrite=False) -> dict:
+def fetch(app_id, context_id, player, api_key=None, overwrite=False) -> dict:
     """
     1. Check if the inventory exists in CACHE_DIR
     2. Try to load from disk
     3. Fetch from URL, otherwise
     """
 
-    inventory_file_path =  fs_handler.get_inventory_file_path(steam_id, app_id)
+    inventory_file_path =  fs_handler.get_inventory_file_path(player.steam_id, app_id)
 
     # Skip download if the file already exists and overwrite is False
     if os.path.exists(inventory_file_path) and not overwrite:
@@ -30,8 +31,8 @@ def fetch(steam_id, app_id, context_id, api_key=None, overwrite=False) -> dict:
         if not inventory_validator.validate_size(inventory):
             raise SystemExit(f"Empty inventory in {inventory_file_path}. Run with --overwrite to download again.")
     else:
-        logger.info('Fetching STEAM_ID %s online inventory ', steam_id)
-        inventory = steam_api_handler.fetch_inventory(steam_id, app_id, context_id, api_key)
+        logger.info('Fetching STEAM_ID %s online inventory ', player.steam_id)
+        inventory = steam_api_handler.fetch_inventory(player.steam_id, app_id, context_id, api_key)
         fs_handler.write_inventory(inventory_file_path, inventory)
 
     log_inventory_details(inventory)

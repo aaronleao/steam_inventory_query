@@ -15,15 +15,11 @@ def get_args():
     parser.add_argument("--profile-user", nargs='+', type=str, help="List of users.")
     parser.add_argument("--app-id", type=str, default="570", help="The app ID (Dota 2=570).")
     parser.add_argument("--api-key", type=str, help="Your Steam API key (optional for some games).")
-    parser.add_argument("--display", action="store_true", help="Dump the inventory on cout.")
+    parser.add_argument("--display-player", action="store_true", help="Dump the inventory on cout.")
+    parser.add_argument("--display-inventory", action="store_true", help="Dump the inventory on cout.")
     parser.add_argument("--overwrite", action="store_true", help="Overwrite the inventory files.")
 
     args = parser.parse_args()
     check_args(args)
 
-    return [args.profile_id,
-            args.profile_user,
-            args.app_id,
-            args.api_key,
-            args.overwrite,
-            args.display]
+    return args
