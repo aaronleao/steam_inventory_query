@@ -6,7 +6,7 @@ def check_args(args):
     """ Check the command line arguments for validity. """
     if args.steam_ids is None and args.steam_users is None:
         raise SystemExit("Please provide either --profile-id or --profile-user.")
-    
+
     # Always display player summaries if inventory is requested
     if args.display_inventory:
         args.display_player = True

@@ -10,7 +10,7 @@ class InventoryItem:
     """
     def __init__(self, item_description: dict):
         if not item_description:
-            return None
+            raise SystemExit("Inventory: Invalid item_description")
 
         self.classid            = item_description['classid']
         self.instanceid         = item_description['instanceid']
@@ -99,8 +99,7 @@ class InventoryItem:
         if hero:
             if self.is_bundle(self.desc_type):
                 return [constants.ItemType.HERO_BUNDLE.name, hero[0]]
-            else:
-                return [constants.ItemType.HERO.name, hero[0]]
+            return [constants.ItemType.HERO.name, hero[0]]
 
         if self.is_bundle(self.desc_type):
             return [constants.ItemType.BUNDLE.name, constants.ItemType.BUNDLE.value]

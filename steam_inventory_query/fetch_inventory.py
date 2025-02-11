@@ -5,7 +5,6 @@ import os
 import sys
 from steam_inventory_query import fs_handler
 from steam_inventory_query import inventory_validator
-from steam_inventory_query import steam_players
 from steam_inventory_query import steam_api_handler
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)

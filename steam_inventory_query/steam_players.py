@@ -9,7 +9,7 @@ from datetime import datetime
 from steam_inventory_query import constants
 from steam_inventory_query import fetch_inventory
 from steam_inventory_query import fs_handler
-from steam_inventory_query.inventory_item import InventoryItem
+from steam_inventory_query import inventory_item
 from steam_inventory_query import steam_api_handler
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
@@ -25,7 +25,7 @@ class Player:
         if player_summaries is None:
             raise SystemExit("Player summaries is empty.")
 
-        self.inventory = dict()
+        self.inventory = {}
         self.app_id = app_id
         self.steam_id = player_summaries.get("steamid")
         self.steam_user = steam_user
@@ -85,14 +85,14 @@ class Player:
 
     def print_inventory(self, display_inventory_full: bool=False):
         """ Print the player inventory. """
-    
+
         print(f"{self.persona_name} inventory")
         for description in self.inventory["descriptions"]:
-            item = InventoryItem(description)
+            item = inventory_item.InventoryItem(description)
             if display_inventory_full:
                 item.print(display_inventory_full)
             else:
-                if item.item_desc_type != constants.ItemType.HERO.name and item.item_desc_type != constants.ItemType.MISC.name:
+                if item.item_desc_type not in (constants.ItemType.HERO.name, constants.ItemType.MISC.name):
                     item.print(display_inventory_full)
         print('_'*142,'\n')
 
@@ -102,14 +102,12 @@ class Player:
         Fetches the inventory for a player.
         """
         self.inventory = fetch_inventory.fetch(self.app_id, constants.CONTEXT_ID, self.steam_id, api_key, overwrite)
-    
-
 
 
 def fetch_players(api_key: str, steam_ids: list, steam_users: list, app_id: str=constants.APP_ID):
     """ Fetches player data from the Steam API. """
 
- 
+
     if steam_ids is None and steam_users:
         steam_ids = [steam_api_handler.resolve_vanity(api_key, steam_user) for steam_user in steam_users]
 
@@ -133,10 +131,9 @@ def fetch_players(api_key: str, steam_ids: list, steam_users: list, app_id: str=
     for player_summaries in players_summaries:
         output_file_path = fs_handler.get_player_summaries_path(player_summaries.get("steamid"))
         if not os.path.exists(output_file_path):
-            logger.info("Player saving in cache: %s", output_file_path)
-            output_file = open(output_file_path, mode="w", encoding="utf-8")
-            json.dump(player_summaries, output_file, indent=4)
-            output_file.close()
+            with open(output_file_path, mode="w", encoding="utf-8") as output_file:
+                logger.info("Player saving in cache: %s", output_file_path)
+                json.dump(player_summaries, output_file, indent=4)
 
     for player_summaries in players_summaries:
         player = Player(player_summaries, app_id)

@@ -27,7 +27,7 @@ def main():
     players = steam_players.fetch_players(args.api_key, args.steam_ids, args.steam_users)
     for player in players:
         player.fetch_inventory(args.api_key, args.overwrite)
-  
+
     for player in players:
         if args.display_player:
             player.print()
