@@ -7,13 +7,9 @@
 # 2. Fetches the inventory for each Steam ID.
 # 3. Displays the fetched inventories if the display option is enabled.
 
-from steam_inventory_query import constants
-from steam_inventory_query import display_inventory
-from steam_inventory_query import fetch_inventory
 from steam_inventory_query import fs_handler
 from steam_inventory_query import parser
 from steam_inventory_query import steam_players
-from steam_inventory_query import steam_api_handler
 
 def main():
     """
@@ -29,16 +25,17 @@ def main():
     args = parser.get_args()
 
     players = steam_players.fetch_players(args.api_key, args.steam_ids, args.steam_users)
-    steam_players.set_players_inventory(args.api_key, players, args.app_id, args.overwrite)
-    
+    for player in players:
+        player.fetch_inventory(args.api_key, args.overwrite)
+  
     for player in players:
         if args.display_player:
             player.print()
         if args.display_inventory:
-            display_inventory.display(player.inventory, args.display_inventory_full)
+            player.print_inventory(args.display_inventory_full)
+
 
 if __name__ == "__main__":
-
     # Create cache dir
     fs_handler.create_cache_dir()
     main()

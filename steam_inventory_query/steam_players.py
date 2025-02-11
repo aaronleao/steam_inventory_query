@@ -1,17 +1,28 @@
+
 """ This module contains the class to represent an player. """
 
+import json
+import os
 from datetime import datetime
 from steam_inventory_query import constants
 from steam_inventory_query import fetch_inventory
+from steam_inventory_query import fs_handler
+from steam_inventory_query.inventory_item import InventoryItem
 from steam_inventory_query import steam_api_handler
 
 class Player:
     """
     This class represents an inventory from a player item.
     """
-    def __init__(self, player_summaries: dict, steam_user: str=None):
+    def __init__(self, player_summaries: dict, app_id: str=constants.APP_NAME, steam_user: str=None):
         """ Initialize the player data. """
 
+        if player_summaries is None:
+            print("Player summaries is empty: ")
+            return None
+
+        self.inventory = dict()
+        self.app_id = app_id
         self.steam_id = player_summaries.get("steamid")
         self.steam_user = steam_user
         self.persona_name = player_summaries.get("personaname")
@@ -37,9 +48,9 @@ class Player:
         self.loc_country_code = player_summaries.get("loccountrycode")
         self.loc_state_code = player_summaries.get("locstatecode")
 
+
     def print(self):
         """ Print the player summaries. """
-
 
         print(f"Steam ID: {self.steam_id}")
         print(f"Steam user: {self.steam_user}")
@@ -67,24 +78,78 @@ class Player:
         print(f"Location state code: {self.loc_state_code}")
         print("\n")
 
-def fetch_players(api_key: str, steam_ids: list, steam_users: list):
-    """
-    Fetches player data from the Steam API.
-    """
 
+    def fetch_inventory(self, api_key: str, overwrite: bool=False):
+        """
+        Fetches the inventory for a player.
+        """
+        # def fetch(app_id, context_id, steam_id:str, api_key=None, overwrite=False) -> dict:
+        print("PLAYER fetch_inventory: ", self.app_id, constants.CONTEXT_ID, self.steam_id, api_key, overwrite)
+        self.inventory = fetch_inventory.fetch(self.app_id, constants.CONTEXT_ID, self.steam_id, api_key, overwrite)
+    
+    def print_inventory(self, display_inventory_full: bool=False):
+        """ Print the player inventory. """
+    
+        for description in self.inventory["descriptions"]:
+            item = InventoryItem(description)
+            if display_inventory_full:
+                item.print(display_inventory_full)
+            else:
+                if item.item_desc_type != constants.ItemType.HERO.name and item.item_desc_type != constants.ItemType.MISC.name:
+                    item.print(display_inventory_full)
+        print('='*140,'\n')
+
+
+
+def fetch_players(api_key: str, steam_ids: list, steam_users: list, app_id: str=constants.APP_ID):
+    """ Fetches player data from the Steam API. """
+
+    
     if steam_ids is None and steam_users:
         steam_ids = [steam_api_handler.resolve_vanity(api_key, steam_user) for steam_user in steam_users]
 
-    players_summaries =  steam_api_handler.fetch_players_summaries(api_key, steam_ids)
+    steam_ids_to_fetch = []
+    players_summaries   = []
+    players = []
 
-    players = [Player(player_summaries) for player_summaries in players_summaries]
+
+    print("fetch_players 0 app_id: ", app_id)
+
+    for steam_id in steam_ids:
+        input_file_path = fs_handler.get_player_summaries_path(steam_id)
+        if os.path.exists(input_file_path):
+            with open(input_file_path, "r", encoding="utf-8") as input_file:
+                print("File exists: ", input_file_path)
+                players_summaries.append(json.load(input_file))
+        else:
+            print("Doesnt exists: ", input_file_path)
+            steam_ids_to_fetch.append(steam_id)
+ 
+    print("fetch_players 1 players_summaries ", players_summaries)
+
+    if steam_ids_to_fetch:
+        print("fetch_players 2 ", steam_ids_to_fetch)
+        fetched_players_summaries = steam_api_handler.fetch_player_summaries(api_key, steam_ids_to_fetch)
+        print("fetch_players 3 ", fetched_players_summaries)
+        players_summaries.extend(fetched_players_summaries)
+        print("fetch_players 4 ", fetched_players_summaries)
+
+    print("fetch_players 5 players_summaries ", players_summaries)
+
+    for player_summaries in players_summaries:
+        print("fetch_players 6 player_summaries ", player_summaries)
+        output_file_path = fs_handler.get_player_summaries_path(player_summaries.get("steamid"))
+        if not os.path.exists(output_file_path):
+            print("fetch_players 7 dont exists ", output_file_path)
+            output_file = open(output_file_path, mode="w", encoding="utf-8")
+            json.dump(player_summaries, output_file, indent=4)
+            output_file.close()
+
+    print("fetch_players 8 os.path.exists(output_file_path)", os.path.exists(output_file_path))
+
+    for player_summaries in players_summaries:
+        print("print 3 len type player_summaries: ", len(player_summaries), type(player_summaries))
+        player = Player(player_summaries, app_id)
+        players.append(player)
 
     return players
-
-def set_players_inventory(api_key: str, players: list, app_id: str, overwrite: bool=False):
-    """
-    Fetches the inventory for a player.
-    """
-
-    for player in players:
-        player.inventory = fetch_inventory.fetch(app_id, constants.CONTEXT_ID, player, api_key, overwrite)

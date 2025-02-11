@@ -22,11 +22,15 @@ class InventoryItem:
         self.description_values = self.get_descriptions_values(item_description)
         [self.item_desc_type, self.item_desc_name] = self.set_item_type()
 
-    def print(self):
+    def print(self, display_full_inventory:bool):
         """ Prints the item description. """
+
         line = f'{self.item_desc_type: <12}|{self.item_desc_name: <30}|{self.desc_type: <30}|{self.name: <60}|{self.marketable: <2}|{self.tradable: <2}|'
         # full_line = f'{self.classid: <10}|{self.instanceid: <10}|{line}'
-        print(line)
+        if not display_full_inventory and self.item_desc_type != constants.ItemType.HERO.name and self.item_desc_type != constants.ItemType.MISC.name:
+            print(line)
+        else:
+            print(line)
 
     def get_descriptions_values(self, item_description: dict):
         """ Returns the values of the descriptions. """

@@ -18,6 +18,8 @@ def fetch_inventory(steam_id: str, app_id: str, context_id: str, api_key: str) -
     url = f"https://steamcommunity.com/inventory/{steam_id}/{app_id}/{context_id}"
     params = {"key": api_key} if api_key else {}
 
+    print("FUNCTION fetch_inventory: ", url, params)
+
     while True:
         # Make the API request
         response = requests.get(url, params=params, timeout=constants.INVENTORY_URL_TIMEOUT)
@@ -57,7 +59,7 @@ def resolve_vanity(api_key: str, steam_user: str) -> str:
     steam_id = response.get("steamid")
     return steam_id
 
-def fetch_players_summaries(api_key, steam_ids):
+def fetch_player_summaries(api_key, steam_ids):
     """ Fetches players data from the Steam API. """
 
     url = "http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/"
