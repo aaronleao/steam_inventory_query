@@ -93,6 +93,8 @@ class Player:
         """Print the player inventory."""
 
         print(f"{self.persona_name} inventory")
+        print(f'Type{" "*8}|Type Name{" "*21}|Quality type{" "*18}|Name{" "*56}|M{" "*1}|T{" "*1}|')
+        print("_" * 142, "\n")
         for description in self.inventory["descriptions"]:
             item = inventory_item.InventoryItem(description)
             if display_inventory_full:
