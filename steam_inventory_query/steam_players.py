@@ -3,12 +3,17 @@
 
 import json
 import os
+import logging
+import sys
 from datetime import datetime
 from steam_inventory_query import constants
 from steam_inventory_query import fetch_inventory
 from steam_inventory_query import fs_handler
 from steam_inventory_query.inventory_item import InventoryItem
 from steam_inventory_query import steam_api_handler
+
+logging.basicConfig(stream=sys.stdout, level=logging.INFO)
+logger = logging.getLogger(__package__)
 
 class Player:
     """
@@ -103,6 +108,7 @@ class Player:
 
 def fetch_players(api_key: str, steam_ids: list, steam_users: list, app_id: str=constants.APP_ID):
     """ Fetches player data from the Steam API. """
+
  
     if steam_ids is None and steam_users:
         steam_ids = [steam_api_handler.resolve_vanity(api_key, steam_user) for steam_user in steam_users]
@@ -116,17 +122,18 @@ def fetch_players(api_key: str, steam_ids: list, steam_users: list, app_id: str=
         input_file_path = fs_handler.get_player_summaries_path(steam_id)
         if os.path.exists(input_file_path):
             with open(input_file_path, "r", encoding="utf-8") as input_file:
+                logger.info("Player found in cache: %s", input_file_path)
                 players_summaries.append(json.load(input_file))
         else:
             steam_ids_to_fetch.append(steam_id)
 
     if steam_ids_to_fetch:
-        fetched_players_summaries = steam_api_handler.fetch_player_summaries(api_key, steam_ids_to_fetch)
-        players_summaries.extend(fetched_players_summaries)
+        players_summaries.extend(steam_api_handler.fetch_player_summaries(api_key, steam_ids_to_fetch))
 
     for player_summaries in players_summaries:
         output_file_path = fs_handler.get_player_summaries_path(player_summaries.get("steamid"))
         if not os.path.exists(output_file_path):
+            logger.info("Player saving in cache: %s", output_file_path)
             output_file = open(output_file_path, mode="w", encoding="utf-8")
             json.dump(player_summaries, output_file, indent=4)
             output_file.close()

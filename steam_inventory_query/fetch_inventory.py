@@ -9,7 +9,6 @@ from steam_inventory_query import steam_players
 from steam_inventory_query import steam_api_handler
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
-
 logger = logging.getLogger(__package__)
 
 def fetch(app_id, context_id, steam_id:str, api_key=None, overwrite=False) -> dict:
