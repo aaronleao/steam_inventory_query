@@ -18,8 +18,6 @@ def fetch_inventory(steam_id: str, app_id: str, context_id: str, api_key: str) -
     url = f"https://steamcommunity.com/inventory/{steam_id}/{app_id}/{context_id}"
     params = {"key": api_key} if api_key else {}
 
-    print("FUNCTION fetch_inventory: ", url, params)
-
     while True:
         # Make the API request
         response = requests.get(url, params=params, timeout=constants.INVENTORY_URL_TIMEOUT)
