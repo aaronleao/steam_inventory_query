@@ -1,4 +1,4 @@
-""" This module contains functions for fetching inventory data from the Steam API. """
+"""This module contains functions for fetching inventory data from the Steam API."""
 
 import sys
 import logging
@@ -9,8 +9,9 @@ from steam_inventory_query import inventory_validator
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 logger = logging.getLogger(__package__)
 
+
 def fetch_inventory(steam_id: str, app_id: str, context_id: str, api_key: str) -> dict:
-    """ Fetches inventory data from the given URL with pagination. """
+    """Fetches inventory data from the given URL with pagination."""
 
     inventory = {"assets": [], "descriptions": []}
 
@@ -20,9 +21,13 @@ def fetch_inventory(steam_id: str, app_id: str, context_id: str, api_key: str) -
 
     while True:
         # Make the API request
-        response = requests.get(url, params=params, timeout=constants.INVENTORY_URL_TIMEOUT)
+        response = requests.get(
+            url, params=params, timeout=constants.INVENTORY_URL_TIMEOUT
+        )
         if response.status_code != 200:
-            raise SystemExit(f"Failed to fetch online inventory. Status code: {response.status_code}")
+            raise SystemExit(
+                f"Failed to fetch online inventory. Status code: {response.status_code}"
+            )
 
         # Parse the JSON response
         data = response.json()
@@ -42,10 +47,11 @@ def fetch_inventory(steam_id: str, app_id: str, context_id: str, api_key: str) -
 
     return inventory
 
-def resolve_vanity(api_key: str, steam_user: str) -> str:
-    """ Resolves a Steam username to a Steam ID. """	
 
-    url = f'http://api.steampowered.com/ISteamUser/ResolveVanityURL/v0001/?key={api_key}&vanityurl={steam_user}'
+def resolve_vanity(api_key: str, steam_user: str) -> str:
+    """Resolves a Steam username to a Steam ID."""
+
+    url = f"http://api.steampowered.com/ISteamUser/ResolveVanityURL/v0001/?key={api_key}&vanityurl={steam_user}"
     params = {}
     response = requests.get(url, params, timeout=constants.INVENTORY_URL_TIMEOUT)
     data = response.json()
@@ -57,8 +63,9 @@ def resolve_vanity(api_key: str, steam_user: str) -> str:
     steam_id = response.get("steamid")
     return steam_id
 
+
 def fetch_player_summaries(api_key, steam_ids):
-    """ Fetches players data from the Steam API. """
+    """Fetches players data from the Steam API."""
 
     url = "http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/"
     params = {"key": api_key, "steamids": steam_ids}
@@ -73,6 +80,6 @@ def fetch_player_summaries(api_key, steam_ids):
             return players
         logger.error("Error: No player data found.")
     else:
-        logger.error("Failed to fetch profile. Status code: %s ",response.status_code)
+        logger.error("Failed to fetch profile. Status code: %s ", response.status_code)
 
     return None

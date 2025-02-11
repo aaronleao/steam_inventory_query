@@ -1,6 +1,7 @@
-""" This module contains the class to represent an inventory item. """
+"""This module contains the class to represent an inventory item."""
 
 from steam_inventory_query import constants
+
 
 class InventoryItem:
     """
@@ -8,67 +9,74 @@ class InventoryItem:
     It provides methods to extract and display relevant information
     from the item description.
     """
+
     def __init__(self, item_description: dict):
         if not item_description:
             raise SystemExit("Inventory: Invalid item_description")
 
-        self.classid            = item_description['classid']
-        self.instanceid         = item_description['instanceid']
-        self.name               = item_description['name']
-        self.market_name        = item_description['market_name']
-        self.marketable         = item_description['marketable'] != 0
-        self.tradable           = item_description['tradable'] != 0
-        self.desc_type          = item_description['type']
+        self.classid = item_description["classid"]
+        self.instanceid = item_description["instanceid"]
+        self.name = item_description["name"]
+        self.market_name = item_description["market_name"]
+        self.marketable = item_description["marketable"] != 0
+        self.tradable = item_description["tradable"] != 0
+        self.desc_type = item_description["type"]
         self.description_values = self.get_descriptions_values(item_description)
         [self.item_desc_type, self.item_desc_name] = self.set_item_type()
 
-    def print(self, display_full_inventory:bool):
-        """ Prints the item description. """
+    def print(self, display_full_inventory: bool):
+        """Prints the item description."""
 
-        line = f'{self.item_desc_type: <12}|{self.item_desc_name: <30}|{self.desc_type: <30}|{self.name: <60}|{self.marketable: <2}|{self.tradable: <2}|'
+        line = f"{self.item_desc_type: <12}|{self.item_desc_name: <30}|{self.desc_type: <30}|{self.name: <60}|{self.marketable: <2}|{self.tradable: <2}|"
         # full_line = f'{self.classid: <10}|{self.instanceid: <10}|{line}'
-        if not display_full_inventory and self.item_desc_type != constants.ItemType.HERO.name and self.item_desc_type != constants.ItemType.MISC.name:
+        if (
+            not display_full_inventory
+            and self.item_desc_type != constants.ItemType.HERO.name
+            and self.item_desc_type != constants.ItemType.MISC.name
+        ):
             print(line)
         else:
             print(line)
 
     def get_descriptions_values(self, item_description: dict):
-        """ Returns the values of the descriptions. """
+        """Returns the values of the descriptions."""
         sub_descriptions = item_description.get("descriptions")
         if sub_descriptions is not None:
-            values = [d['value'] for d in sub_descriptions if 'value' in d]
+            values = [d["value"] for d in sub_descriptions if "value" in d]
             return values
         return None
 
     def is_hero(self, description_values: list) -> str:
-        """ Returns if it is a HERO item """
+        """Returns if it is a HERO item"""
         if not description_values:
             return None
 
-        return [value.split(':')[1].strip()
-                for value in description_values
-                if value.startswith('Used By:')]
+        return [
+            value.split(":")[1].strip()
+            for value in description_values
+            if value.startswith("Used By:")
+        ]
 
     def is_weather(self, desc_type: str) -> bool:
-        """ Returns if it is a WEATHER item """
+        """Returns if it is a WEATHER item"""
         if desc_type and "Weather" in desc_type:
             return True
         return False
 
     def is_bundle(self, desc_type: str) -> bool:
-        """ Returns if it is a BUNDLE item """
+        """Returns if it is a BUNDLE item"""
         if desc_type and "Bundle" in desc_type:
             return True
         return False
 
     def is_ward(self, desc_type: str) -> bool:
-        """ Returns if it is a WARD item """
+        """Returns if it is a WARD item"""
         if desc_type and "Ward" in desc_type:
             return True
         return False
 
     def is_courier(self, desc_type: str) -> bool:
-        """ Returns if it is a COURIER item """
+        """Returns if it is a COURIER item"""
         if desc_type and "Courier" in desc_type:
             return True
         return False

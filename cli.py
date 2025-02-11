@@ -1,4 +1,5 @@
-""" Main entry point for the Steam inventory query CLI. """
+"""Main entry point for the Steam inventory query CLI."""
+
 # Description: Main entry point for the Steam inventory query CLI.
 #
 # This module is responsible for handling the main entry point for the Steam inventory query CLI.
@@ -10,6 +11,7 @@
 from steam_inventory_query import fs_handler
 from steam_inventory_query import parser
 from steam_inventory_query import steam_players
+
 
 def main():
     """
@@ -24,7 +26,9 @@ def main():
     # Get args
     args = parser.get_args()
 
-    players = steam_players.fetch_players(args.api_key, args.steam_ids, args.steam_users)
+    players = steam_players.fetch_players(
+        args.api_key, args.steam_ids, args.steam_users
+    )
     for player in players:
         player.fetch_inventory(args.api_key, args.overwrite)
 
