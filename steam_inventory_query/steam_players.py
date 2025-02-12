@@ -100,7 +100,7 @@ class Player:
             if display_inventory_full:
                 item.print(display_inventory_full)
             else:
-                if item.item_desc_type not in (
+                if item.type_desc not in (
                     constants.ItemType.HERO.name,
                     constants.ItemType.MISC.name,
                 ):

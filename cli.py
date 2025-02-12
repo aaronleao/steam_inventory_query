@@ -10,8 +10,8 @@
 
 from steam_inventory_query import fs_handler
 from steam_inventory_query import parser
+from steam_inventory_query import steam_api_handler
 from steam_inventory_query import steam_players
-
 
 def main():
     """
@@ -32,11 +32,22 @@ def main():
     for player in players:
         player.fetch_inventory(args.api_key, args.overwrite)
 
+    # market = steam_api_handler.fetch_steam_market(args.api_key, args.app_id)
+    # print("CLI market", market)
+
     for player in players:
         if args.display_player:
             player.print()
         if args.display_inventory:
             player.print_inventory(args.display_inventory_full)
+        
+
+
+    # ## Fetch steam market item price
+    # for player in players:
+    #     for item in player.inventory:
+    #         if item.marketable:
+    #             steam_api_handler.fetch_steam_maket_price(args.api_key, args.app_id, item.market_hash_name)
 
 
 if __name__ == "__main__":

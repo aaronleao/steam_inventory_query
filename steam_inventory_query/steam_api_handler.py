@@ -83,3 +83,50 @@ def fetch_player_summaries(api_key, steam_ids):
         logger.error("Failed to fetch profile. Status code: %s ", response.status_code)
 
     return None
+
+
+def fetch_steam_market_item_price(api_key, app_id, market_hash_name):
+    """
+    Fetches the current market value of an item using the SteamApis API.
+
+    Args:
+        api_key (str): Your SteamApis API key.
+        app_id (str): The app ID of the game (e.g., 730 for CS:GO).
+        market_hash_name (str): The market hash name of the item.
+
+    Returns:
+        str: The current market value of the item or None if the request fails.
+    """
+    url = f"https://steamcommunity.com/market/priceoverview/"
+    # https://steamcommunity.com/market/priceoverview/?appid=570&market_hash_name=Genuine%20Smeevil&currency=1&api_key=API_KEY
+
+
+    # Parameters
+    params = {
+        "api_key": api_key,
+        "appid": app_id,
+        "market_hash_name": market_hash_name,
+        "currency": 1
+    }
+
+    # Make the request
+    response = requests.get(url, params=params, timeout=constants.INVENTORY_URL_TIMEOUT)
+    if response.status_code != 200:
+        print(f"Failed to fetch market data. Status code: {response.status_code}")
+        return None
+
+# https://steamcommunity.com/market/priceoverview/?appid=570&market_hash_name=Genuine%20Smeevil&currency=1
+# {
+#   "success": true,
+#   "lowest_price": "$0.11",
+#   "volume": "16",
+#   "median_price": "$0.10"
+# }
+    # Parse the response
+    data = response.json()
+    for item in data:
+        if item["market_hash_name"] == market_hash_name:
+            return item["prices"]["safe"]
+
+    print(f"Item '{market_hash_name}' not found.")
+    return None
