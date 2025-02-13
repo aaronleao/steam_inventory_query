@@ -12,7 +12,7 @@ class InventoryItem:
     from the item description.
     """
 
-    def __init__(self, item_description: dict):
+    def __init__(self, item_description: dict, api_key: str=None):
         if not item_description:
             raise SystemExit("Inventory: Invalid item_description")
 
@@ -38,10 +38,17 @@ class InventoryItem:
         self.tags = item_description.get('tags')
 
         # Custom Inventory Item keys
+        self.lowest_price = "N/A"
+        self.median_price = "N/A"
+        self.volume = "N/A"
         self.descriptions = item_description.get("descriptions")
         self.description_values = self.get_descriptions_values()
         [self.type_desc, self.type_desc_name] = self.set_item_type()
         self.may_be_gifted_once = self.set_is_gifted_once()
+
+
+        if self.marketable and api_key:
+            self.fetch_steam_maket_price(api_key)
 
     def print(self, display_full_inventory: bool):
         """Prints the item description."""
@@ -150,6 +157,9 @@ class InventoryItem:
         Fetch Item Market price
         """
         if self.marketable:
-            data = steam_api_handler.fetch_steam_market_item_price(api_key, self.appid, self.market_hash_name)
-            print ("Item Market Data", self.name, data)
-            sys.exit(0)
+            [self.lowest_price,
+             self.median_price,
+             self.volume] = steam_api_handler.fetch_steam_market_item_price(api_key,
+                                                                             self.appid,
+                                                                             self.market_hash_name)
+

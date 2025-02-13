@@ -113,20 +113,16 @@ def fetch_steam_market_item_price(api_key, app_id, market_hash_name):
     response = requests.get(url, params=params, timeout=constants.INVENTORY_URL_TIMEOUT)
     if response.status_code != 200:
         print(f"Failed to fetch market data. Status code: {response.status_code}")
-        return None
+        return ["N/A", "N/A", "N/A"]
 
-# https://steamcommunity.com/market/priceoverview/?appid=570&market_hash_name=Genuine%20Smeevil&currency=1
-# {
-#   "success": true,
-#   "lowest_price": "$0.11",
-#   "volume": "16",
-#   "median_price": "$0.10"
-# }
     # Parse the response
     data = response.json()
-    for item in data:
-        if item["market_hash_name"] == market_hash_name:
-            return item["prices"]["safe"]
 
-    print(f"Item '{market_hash_name}' not found.")
-    return None
+    if data.get("success"):
+        lowest_price = data.get("lowest_price")
+        volume = data.get("volume")
+        median_price = data.get("median_price")
+        return [lowest_price, median_price, volume]
+    else:
+        print(f"Item '{market_hash_name}' not found in market.")
+        return ["N/A", "N/A", "N/A"]

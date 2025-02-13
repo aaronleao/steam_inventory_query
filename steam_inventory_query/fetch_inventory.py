@@ -11,7 +11,7 @@ logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 logger = logging.getLogger(__package__)
 
 
-def fetch(app_id, context_id, steam_id: str, api_key=None, overwrite=False) -> dict:
+def load_json(app_id, context_id, steam_id: str, api_key=None, overwrite=False) -> dict:
     """
     1. Check if the inventory exists in CACHE_DIR
     2. Try to load from disk
@@ -38,17 +38,7 @@ def fetch(app_id, context_id, steam_id: str, api_key=None, overwrite=False) -> d
         inventory = steam_api_handler.fetch_inventory(
             steam_id, app_id, context_id, api_key
         )
-        fs_handler.write_inventory(inventory_file_path, inventory)
-
-    log_inventory_details(inventory)
 
     return inventory
 
 
-def log_inventory_details(inventory: dict):
-    """
-    Log details about the inventory.
-    """
-
-    logger.info("Assets: %d", len(inventory["assets"]))
-    logger.info("Descriptions: %d", len(inventory["descriptions"]))

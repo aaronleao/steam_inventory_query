@@ -31,7 +31,8 @@ class Player:
         if player_summaries is None:
             raise SystemExit("Player summaries is empty.")
 
-        self.inventory = {}
+        self.inventory_json = {}
+        self.inventory = []
         self.app_id = app_id
         self.steam_id = player_summaries.get("steamid")
         self.steam_user = steam_user
@@ -89,31 +90,80 @@ class Player:
         print(f"Location state code: {self.loc_state_code}")
         print("_" * 142, "\n")
 
-    def print_inventory(self, display_inventory_full: bool = False):
+    def print_inventory(self, display_inventory_full: bool = False, api_key: str=None):
         """Print the player inventory."""
 
-        print(f"{self.persona_name} inventory")
-        print(f'Type{" "*8}|Type Name{" "*21}|Quality type{" "*18}|Name{" "*56}|M{" "*1}|T{" "*1}|')
-        print("_" * 142, "\n")
-        for description in self.inventory["descriptions"]:
-            item = inventory_item.InventoryItem(description)
-            if display_inventory_full:
-                item.print(display_inventory_full)
-            else:
-                if item.type_desc not in (
-                    constants.ItemType.HERO.name,
-                    constants.ItemType.MISC.name,
-                ):
-                    item.print(display_inventory_full)
-        print("_" * 142, "\n")
+        print(f"print_inventory Needs refactory")
+        # print(f"{self.persona_name} inventory")
+        # print(f'Type{" "*8}|Type Name{" "*21}|Quality type{" "*18}|Name{" "*56}|M{" "*1}|T{" "*1}|')
+        # print("_" * 142, "\n")
+        # for description in self.inventory_json["descriptions"]:
+        #     item = inventory_item.InventoryItem(description, api_key)
+        #     if display_inventory_full:
+        #         item.print(display_inventory_full)
+        #     else:
+        #         if item.type_desc not in (
+        #             constants.ItemType.HERO.name,
+        #             constants.ItemType.MISC.name,
+        #         ):
+        #             item.print(display_inventory_full)
+        # print("_" * 142, "\n")
 
-    def fetch_inventory(self, api_key: str, overwrite: bool = False):
+    def load_inventory_json(self, api_key: str):
         """
         Fetches the inventory for a player.
         """
-        self.inventory = fetch_inventory.fetch(
-            self.app_id, constants.CONTEXT_ID, self.steam_id, api_key, overwrite
+        self.inventory_json = fetch_inventory.load_json(
+            self.app_id, constants.CONTEXT_ID, self.steam_id, api_key
         )
+
+    def load_inventory(self, api_key: str, overwrite: bool = False):
+        """
+        Fetches the inventory for a player.
+        """
+
+        self.load_inventory_json(api_key)
+
+        count = 0
+        for item_description in self.inventory_json["descriptions"]:
+            print("load inventory count, ", count, item_description.get('name'))
+            self.inventory.append(inventory_item.InventoryItem(item_description, api_key))
+            count = count +1
+            if count >=10:
+                break
+        # self.inventory = [inventory_item.InventoryItem(item_description, api_key)
+        #                   for item_description in self.inventory_json["descriptions"]]
+
+        self.inventory_summary()
+        self.inventory_to_json()
+        inventory_file_path = fs_handler.get_inventory_file_path(self.steam_id, self.app_id)
+        # if overwrite:
+        fs_handler.write_inventory(inventory_file_path, self.inventory_json)
+
+
+
+
+    def inventory_summary(self):
+        """
+        Log inventory summary.
+        """
+
+        logger.info("Assets: %d", len(self.inventory))
+
+
+
+    def inventory_to_json(self):
+        """
+        Add custom attributes to json and dump inventory
+        """
+        for [item, item_description] in zip(self.inventory, self.inventory_json.get("descriptions")):
+            new_keys = {"type_desc": item.type_desc,
+                       "type_desc_name": item.type_desc_name,
+                       "may_be_gifted_once":  item.may_be_gifted_once,
+                       "lowest_price":  item.lowest_price,
+                       "median_price":  item.median_price,
+                       "volume":  item.volume}
+            item_description.update(new_keys)
 
 
 def fetch_players(
